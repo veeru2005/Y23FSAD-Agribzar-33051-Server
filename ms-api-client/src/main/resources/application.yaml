@@ -1,0 +1,43 @@
+server:
+  port: 8080  # Gateway service runs on port 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: apigateway  # Name of the gateway service
+  cloud:
+    gateway:
+      routes:
+        - id: feedbackservice
+          uri: lb://feedbackservice
+          predicates:
+            - Path=/feedback/**
+          filters:
+            - StripPrefix=1
+
+        - id: offerservice
+          uri: lb://offerservice
+          predicates:
+            - Path=/offer/**
+          filters:
+            - StripPrefix=1
+
+        - id: productservice
+          uri: lb://productservice
+          predicates:
+            - Path=/product/**
+          filters:
+            - StripPrefix=1
+
+        - id: userservice
+          uri: lb://userservice
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
